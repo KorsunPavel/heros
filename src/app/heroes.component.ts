@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 
 import { HeroService } from './hero.service';
-import { HeroDetailComponent } from './hero-detail.component';
+//import { HeroDetailComponent } from './hero-detail.component';
 import { Hero } from './hero';
 import { Component } from '@angular/core';
 
@@ -34,6 +34,25 @@ export class HeroesComponent {
 
   gotoDetail(): void {
     this.router.navigate(['/detail', this.selectedHero.id]);
+  }
+
+  add(name: string): void {
+    name = name.trim();
+    if (!name) { return; }
+    this.heroService.create(name)
+      .then(hero => {
+        this.heroes.push(hero);
+        this.selectedHero = null;
+      });
+  }
+
+  delete(hero: Hero): void {
+    this.heroService
+      .delete(hero.id)
+      .then(() => {
+        this.heroes = this.heroes.filter(h => h !== hero);
+        if (this.selectedHero === hero) { this.selectedHero = null; }
+      });
   }
 }
 
